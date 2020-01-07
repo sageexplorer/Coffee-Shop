@@ -13,7 +13,7 @@ setup_db(app)
 CORS(app)
 
 
-#db_drop_and_create_all()
+db_drop_and_create_all()
 
 ''' -- ROUTES -- '''
 
@@ -62,15 +62,11 @@ def add_drinks(permission=''):
         return jsonify({
             'success': True,
             'drink': request.get_json()
-            
         })
-
     except Exception as e:
-        print(e)
+        print("MY ERROR IS",e)
         abort(422)
   
-
-
 
 @app.route('/drinks/<int:id>',methods=['PATCH'])
 @requires_auth('patch:drinks')
@@ -79,20 +75,19 @@ def patch_drinks(permission, id):
     drink = Drink.query.filter_by(id=id).first()
     if drink is None:
         abort(404)
+    params = lambda val: request.get_json().get(val)
     try:
-        drink = Drink.query.filter_by(id=id).first()
-        title = request.get_json()['title']
-        recipe = request.get_json()['recipe']
-
-        drink.title = title
-        drink.recipe = json.dumps(recipe)
+        if params('title'):
+            drink.title = request.get_json()['title']
+        if params('recipe'):
+            drink.recipe = json.dumps(request.get_json()['recipe'])
         drink.update()
-        return ({
+        return jsonify({
             'success': True,
             'drinks': [drink.long()]
-        })
+        }), 200
     except Exception:
-        abort(422)    
+        abort(422)
 
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
@@ -142,3 +137,10 @@ def autherror(error):
                     "error": 401,
                     "message": "Authorization error"
                     }), 401
+@app.errorhandler(403)
+def permissionerror(error):
+    return jsonify({
+                    "success": False, 
+                    "error": 403,
+                    "message": "Permission Denied."
+                    }), 403                    
