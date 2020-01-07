@@ -125,12 +125,15 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
             }, 400)
     
-
+'''If JWT token is not found or invalid, then throw authentication error'''
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            token = get_token_auth_header()
+            try:
+                token = get_token_auth_header()
+            except:
+                abort(401)    
             try:
                 payload = verify_decode_jwt(token)
             except:
