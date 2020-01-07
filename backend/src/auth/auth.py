@@ -3,6 +3,7 @@ from flask import request, _request_ctx_stack
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
+from flask import Flask, request, jsonify, abort
 
 
 AUTH0_DOMAIN = 'dev--c9y9ca9.auth0.com'
@@ -66,9 +67,9 @@ def get_token_auth_header():
 
 def check_permissions(permission, payload):
     if permission not in payload['permissions']:
-        abort(403)
-    print('MY PERMISSION IS ', payload['permissions'])    
-    return True    
+        abort(401)
+    return True  
+ 
 
 
 def verify_decode_jwt(token):
@@ -130,7 +131,10 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            payload = verify_decode_jwt(token)
+            try:
+                payload = verify_decode_jwt(token)
+            except:
+                abort(401)    
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
 
