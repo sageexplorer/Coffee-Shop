@@ -1,0 +1,20 @@
+name: db test
+on: [workflow_dispatch]
+jobs:
+  test-container:
+    runs-on: ubuntu-latest
+    container: ubuntu
+    services:
+      mydb:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+    steps:
+    - name: Verify MySQL connection from container 
+      run: |
+        apt-get update
+        apt-get install -y mysql-client
+        /etc/init.d/mysql start
+        mysql -uroot -h127.0.0.1 -proot -ppassword -e "CREATE DATABASE IF NOT EXISTS `ender.com`;"
+        mysql --host mydb -uroot -ppassword -e "SHOW DATABASES"
