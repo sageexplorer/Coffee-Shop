@@ -8,13 +8,11 @@ jobs:
       mydb:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+          DB_DATABASE: ender.com
+          DB_USER: root
+          DB_PASSWORD: root
     steps:
-    - name: Verify MySQL connection from container 
-      run: |
-        apt-get update
-        apt-get install -y mysql-client
-        /etc/init.d/mysql start
-        mysql -uroot -h127.0.0.1 -proot -ppassword -e "CREATE DATABASE IF NOT EXISTS `ender.com`;"
-        mysql --host mydb -uroot -ppassword -e "SHOW DATABASES"
+          - name: Set up MySQL
+            run: |
+              sudo /etc/init.d/mysql start
+              mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
