@@ -14,4 +14,6 @@ jobs:
     steps:
           - name: Set up MySQL
             run: |
-              mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+               apt-get update
+               apt-get install -y mysql-client
+               mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
