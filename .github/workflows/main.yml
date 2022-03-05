@@ -12,6 +12,8 @@ jobs:
           DB_USER: root
           DB_PASSWORD: root
     steps:
+          - name: Install sudo package
+            run: apt update && apt install sudo
           - name: Set up MySQL
             run: |
               sudo /etc/init.d/mysql start
