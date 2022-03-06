@@ -19,6 +19,6 @@ jobs:
                apt update && apt install sudo
                apt-get update
                apt-get install -y mysql-client
-               systemctl start mysql
+               sudo systemctl start mysql
                mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
                mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
