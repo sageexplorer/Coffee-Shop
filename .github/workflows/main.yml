@@ -7,7 +7,7 @@ jobs:
     container: ubuntu
     services:
       mydb:
-        image: mysql:5.7
+        image: mysql:latest
         ports: 
         - 32574:3306
         env:
