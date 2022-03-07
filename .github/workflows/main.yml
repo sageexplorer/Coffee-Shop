@@ -22,4 +22,4 @@ jobs:
                apt-get install -y mysql-client
                sudo systemctl enable mysqld
                mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
-               mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+               mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_ROOT_PASSWORD }}
