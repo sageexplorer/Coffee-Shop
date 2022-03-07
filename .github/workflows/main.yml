@@ -12,13 +12,10 @@ jobs:
         - 32574:3306
         env:
           DB_DATABASE: ender.com
-            - MYSQL_USER=root
-            - MYSQL_ROOT_PASSWORD=password
+            MYSQL_USER=root
+            MYSQL_ROOT_PASSWORD=password
     steps:
           - name: Set up MySQL
-            env: |
-              - MYSQL_USER=root
-              - MYSQL_ROOT_PASSWORD=password
             run: |
                apt update && apt install sudo
                apt-get update
